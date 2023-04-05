@@ -1,5 +1,6 @@
 // navigating to http://localhost:3000/api/revalidate
-// revalidates up to and including 13.1.6, but not in latest canary
+// clears cache in dev mode, and calls res.revalidate in production
+// works as per the docs
 
 import fs from "fs";
 import path from "path";
@@ -18,21 +19,21 @@ const directory = process.cwd() + "/.next/cache/fetch-cache";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
-    console.log("clearing cache");
-    fs.readdir(directory, (err, files) => {
-      if (err) throw err;
-      for (const file of files) {
-        fs.unlink(path.join(directory, file), (err) => {
-          if (err) throw err;
-        });
-      }
-    });
-    if (process.env.NODE_ENV == "production") {
+    if (process.env.NODE_ENV === "development") {
+      console.log("clearing cache");
+      fs.readdir(directory, (err, files) => {
+        if (err) throw err;
+        for (const file of files) {
+          fs.unlink(path.join(directory, file), (err) => {
+            if (err) throw err;
+          });
+        }
+      });
+      return res.json({ cacheCleared: true });
+    } else {
       console.log("revalidating");
       await res.revalidate("/");
       return res.json({ revalidated: true });
-    } else {
-      return res.json({ cacheCleared: true });
     }
   } catch (err) {
     console.log("an error occured", err);

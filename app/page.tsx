@@ -1,9 +1,9 @@
 // export const dynamic = “force-dynamic”; // enabling this: data is still cached indefinitely
-// export const fetchCache = "force-cache";   // enabling this: data is still cached indefinately
+// export const fetchCache = "force-no-store";   // enabling this: data is still cached indefinately
 // export const revalidate = 0; //  enabling this: data is revalidated after ~10 secs
 
 // import { ApolloClient, InMemoryCache, HttpLink, from, ApolloLink, gql } from "@apollo/client";
-// import { onError } from "@apollo/client/link/error";
+// // import { onError } from "@apollo/client/link/error";
 // import moment from "moment";
 
 // const client = new ApolloClient({
@@ -49,7 +49,13 @@ export default async function Home() {
     // { cache: "no-store" } // enabling this: data is not cached
   );
 
+  // const bib = await fetch (
+  //   "http://localhost:1337/uploads/refs_3f0c70dda1.bib"
+  // )
+
   const data = (await res.json()) as { hour: number; minute: number; seconds: number };
+
+  // const toll = await bib.text()
 
   // const strapidata = await getData();
 
@@ -58,11 +64,11 @@ export default async function Home() {
       <h1>
         Time in Amsterdam is {data.hour}:{data.minute}:{data.seconds}
       </h1>
-      {/* <p>{JSON.stringify(strapidata)}</p> */}
-      {/* <h1> */}
-        {/* Strapi updatedAt:&nbsp; */}
-        {/* {moment(strapidata.front.data.attributes.updatedAt as string).format("HH:mm:ss")} */}
-      {/* </h1> */}
+      {/* <p>{JSON.stringify(toll)}</p> */}
+      {/* <h1>
+        Strapi updatedAt:&nbsp;
+        {moment(strapidata.front.data.attributes.updatedAt as string).format("HH:mm:ss")}
+      </h1> */}
     </>
   );
 }
